@@ -2,7 +2,7 @@ import { findSomeMoviePosters } from "./movieData";
 
 const searchResults = document.getElementById("search-results");
 const searchTextField = document.getElementById("search-movies");
-const searchButton = document.getElementById("search-button");
+const form = document.getElementById("film-search-form");
 
 const addPosterBricks = async () => {
     const searchTerm = searchTextField.value;
@@ -11,4 +11,7 @@ const addPosterBricks = async () => {
     searchResults.innerHTML = moviePosters.join("");
 };
 
-searchButton.onclick = addPosterBricks;
+form.onsubmit = (event) => {
+    event.preventDefault();
+    addPosterBricks();
+};
