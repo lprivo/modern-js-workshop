@@ -3,15 +3,26 @@ import { getSomeData } from "./network";
 
 export const hasAPoster = (movie) => movie.Poster !== "N/A";
 
-export const getPoster = (movie) =>
-    `<img src="${movie.Poster}" alt="${movie.Title}" />`;
+export const getPosterUrl = (movie) => {
+    if (hasAPoster(movie)) {
+        return movie.Poster;
+    }
 
-export const findSomeMoviePosters = async (key) => {
+    return `//www.classicposters.com/images/nopicture.gif`;
+};
+
+export const findMovies = async (key, page = 1) => {
     const result = await getSomeData(
-        `http://www.omdbapi.com/?s=${key}&apikey=${OMDB_API_KEY}`
+        `http://www.omdbapi.com/?s=${key}&apikey=${OMDB_API_KEY}&page=${page}`
     );
 
-    const posters = result.Search.filter(hasAPoster).map(getPoster);
+    return result;
+};
 
-    return posters;
+export const findMovie = async (imdbId) => {
+    const result = await getSomeData(
+        `http://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${imdbId}&plot=short`
+    );
+
+    return result;
 };

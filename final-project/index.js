@@ -1,17 +1,37 @@
-import { findSomeMoviePosters } from "./movieData";
+import { findMovies, getPosterUrl } from "./movieData";
 
 const searchResults = document.getElementById("search-results");
 const searchTextField = document.getElementById("search-movies");
 const form = document.getElementById("film-search-form");
 
-const addPosterBricks = async () => {
+const getMovies = async () => {
     const searchTerm = searchTextField.value;
-    const moviePosters = await findSomeMoviePosters(searchTerm);
 
-    searchResults.innerHTML = moviePosters.join("");
+    return findMovies(searchTerm);
 };
 
-form.onsubmit = (event) => {
+const createMoviesHtml = (movie) => {
+    const movieImage = getPosterUrl(movie);
+    const movieTitle = movie.Title;
+    const image = `<img src=${movieImage} alt=${movieTitle} />`;
+    const entry = `<a href="" >${image}</a>`;
+
+    return entry;
+};
+
+const createPosterImg = async (movies) => {
+    const moviesList = movies.Search.map(createMoviesHtml).join("");
+
+    searchResults.innerHTML = await moviesList;
+};
+
+form.onsubmit = async (event) => {
     event.preventDefault();
-    addPosterBricks();
+    const movies = await getMovies();
+
+    createPosterImg(movies);
 };
+
+// add pagination
+// style the results
+// add validation
