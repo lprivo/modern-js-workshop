@@ -1,4 +1,4 @@
-import { findMovies, getPosterUrl } from "./movieData";
+import { findMovies, findMovie, getPosterUrl } from "./movieData";
 
 const searchResults = document.getElementById("search-results");
 const searchTextField = document.getElementById("search-movies");
@@ -13,23 +13,35 @@ const getMovies = async () => {
 const createMoviesHtml = (movie) => {
     const movieImage = getPosterUrl(movie);
     const movieTitle = movie.Title;
-    const image = `<img src=${movieImage} alt=${movieTitle} />`;
-    const entry = `<a href="" >${image}</a>`;
+    const movieImdb = movie.imdbID;
+    const image = `<img src=${movieImage} alt='${movieTitle}' id=${movieImdb} class="poster" />`;
 
-    return entry;
+    return image;
 };
 
 const createPosterImg = async (movies) => {
-    const moviesList = movies.Search.map(createMoviesHtml).join("");
+    const moviesList = movies.Search.map(createMoviesHtml);
 
-    searchResults.innerHTML = await moviesList;
+    searchResults.innerHTML = await moviesList.join("");
+
+    return moviesList;
+};
+
+const addEventListeners = () => {
+    document.querySelectorAll(".poster").forEach((item) => {
+        item.onclick = () => {
+            findMovie(item.id);
+        };
+    });
 };
 
 form.onsubmit = async (event) => {
     event.preventDefault();
-    const movies = await getMovies();
-
-    createPosterImg(movies);
+    await getMovies()
+        .then(createPosterImg, (error) => {
+            console.log("error with movies", error);
+        })
+        .then(addEventListeners);
 };
 
 // add pagination
