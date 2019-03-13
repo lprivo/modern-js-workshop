@@ -4,21 +4,26 @@ const searchResults = document.getElementById("search-results");
 const errorField = document.getElementById("errors");
 const searchTextField = document.getElementById("search-movies");
 
+const setErrorMessage = (message = "") => {
+    errorField.innerHTML = `<h2>${message}</h2>`;
+};
+
 const getMovies = async () => {
     if (searchTextField.value) {
         const searchTerm = searchTextField.value;
         const movies = await findMovies(searchTerm);
+        // maybe if something clever is done in findMovies, I wouldn't need all this here
 
         if (movies.Response === "False") {
-            errorField.innerHTML = `<h2>${movies.Error}</h2>`;
+            setErrorMessage(movies.Error);
             searchResults.innerHTML = "";
         } else {
-            errorField.innerHTML = "";
+            setErrorMessage();
         }
 
         return movies;
     }
-    errorField.innerHTML = `<h2>Keep Typing</h2>`;
+    setErrorMessage("Keep Typing");
 
     return null;
 };

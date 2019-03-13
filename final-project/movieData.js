@@ -1,7 +1,9 @@
 import { OMDB_API_KEY } from "./credentials";
 import { getSomeData } from "./network";
 
-export const hasAPoster = (movie) => movie.Poster !== "N/A";
+const hasAPoster = (movie) => movie.Poster !== "N/A";
+
+const hasAnError = (result) => result.Response === "False";
 
 export const getPosterUrl = (movie) => {
     if (hasAPoster(movie)) {
@@ -16,7 +18,10 @@ export const findMovies = async (key, page = 1) => {
         `http://www.omdbapi.com/?s=${key}&apikey=${OMDB_API_KEY}&page=${page}`
     );
 
-    // console.log(result);
+    if (hasAnError(result)) {
+        // maybe here I could do something clever
+        // return "";
+    }
 
     return result;
 };
