@@ -1,6 +1,7 @@
-export const getSomeData = async (url) => {
-    const result = await fetch(url);
-    const data = await result.json();
+import { createfetchUnlessCached } from "fetch-unless-cached";
 
-    return data;
+export const getSomeData = async (url) => {
+    const cachedFetch = createfetchUnlessCached(3600);
+
+    return cachedFetch(url);
 };
