@@ -1,13 +1,26 @@
 import { findMovies, findMovie, getPosterUrl } from "./movieData";
 
 const searchResults = document.getElementById("search-results");
+const errorField = document.getElementById("errors");
 const searchTextField = document.getElementById("search-movies");
-const form = document.getElementById("film-search-form");
 
 const getMovies = async () => {
-    const searchTerm = searchTextField.value;
+    if (searchTextField.value) {
+        const searchTerm = searchTextField.value;
+        const movies = await findMovies(searchTerm);
 
-    return findMovies(searchTerm);
+        if (movies.Response === "False") {
+            errorField.innerHTML = `<h2>${movies.Error}</h2>`;
+            searchResults.innerHTML = "";
+        } else {
+            errorField.innerHTML = "";
+        }
+
+        return movies;
+    }
+    errorField.innerHTML = `<h2>Keep Typing</h2>`;
+
+    return null;
 };
 
 const createMoviesHtml = (movie) => {
@@ -20,11 +33,15 @@ const createMoviesHtml = (movie) => {
 };
 
 const createPosterImg = async (movies) => {
-    const moviesList = movies.Search.map(createMoviesHtml);
+    if (movies && movies.Response !== "False") {
+        const moviesList = movies.Search.map(createMoviesHtml);
 
-    searchResults.innerHTML = await moviesList.join("");
+        searchResults.innerHTML = await moviesList.join("");
 
-    return moviesList;
+        return moviesList;
+    }
+
+    return ``;
 };
 
 const addEventListeners = () => {
@@ -35,15 +52,13 @@ const addEventListeners = () => {
     });
 };
 
-form.onsubmit = async (event) => {
+// form.onsubmit = async (event) => {
+searchTextField.onkeyup = async (event) => {
     event.preventDefault();
-    await getMovies()
-        .then(createPosterImg, (error) => {
-            console.log("error with movies", error);
-        })
+    getMovies()
+        .then(createPosterImg)
         .then(addEventListeners);
 };
 
 // add pagination
 // style the results
-// add validation
