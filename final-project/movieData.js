@@ -5,6 +5,24 @@ const hasAPoster = (movie) => movie.Poster !== "N/A";
 
 const hasAnError = (result) => result.Response === "False";
 
+const generateResponseCode = (result) => {
+    console.log(result);
+
+    if (hasAnError(result)) {
+        const responseCodes = {
+            "Too many results.": "420",
+            "Movie not found!": "404",
+            "Keep typing": "418",
+        };
+
+        result.ResponseCode = responseCodes[result.Error];
+    } else {
+        result.ResponseCode = "200";
+    }
+
+    return result;
+};
+
 export const getPosterUrl = (movie) => {
     if (hasAPoster(movie)) {
         return movie.Poster;
@@ -14,16 +32,17 @@ export const getPosterUrl = (movie) => {
 };
 
 export const findMovies = async (key, page = 1) => {
-    const result = await getSomeData(
-        `http://www.omdbapi.com/?s=${key}&apikey=${OMDB_API_KEY}&page=${page}`
-    );
+    let result = {};
 
-    if (hasAnError(result)) {
-        // maybe here I could do something clever
-        // return "";
+    if (key) {
+        result = await getSomeData(
+            `http://www.omdbapi.com/?s=${key}&apikey=${OMDB_API_KEY}&page=${page}`
+        );
+    } else {
+        result = { Response: "False", Error: "Keep typing" };
     }
 
-    return result;
+    return generateResponseCode(result);
 };
 
 export const findMovie = async (imdbId) => {

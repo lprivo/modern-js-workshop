@@ -4,28 +4,24 @@ const searchResults = document.getElementById("search-results");
 const errorField = document.getElementById("errors");
 const searchTextField = document.getElementById("search-movies");
 
-const setErrorMessage = (message = "") => {
+const setErrorMessage = (movies) => {
+    let message = "";
+
+    if (movies.ResponseCode !== "200") {
+        message = movies.Error;
+    }
+
     errorField.innerHTML = `<h2>${message}</h2>`;
 };
 
 const getMovies = async () => {
-    if (searchTextField.value) {
-        const searchTerm = searchTextField.value;
-        const movies = await findMovies(searchTerm);
-        // maybe if something clever is done in findMovies, I wouldn't need all this here
+    const searchTerm = searchTextField.value;
+    const movies = await findMovies(searchTerm);
+    // maybe if something clever is done in findMovies, I wouldn't need all this here
 
-        if (movies.Response === "False") {
-            setErrorMessage(movies.Error);
-            searchResults.innerHTML = "";
-        } else {
-            setErrorMessage();
-        }
+    setErrorMessage(movies);
 
-        return movies;
-    }
-    setErrorMessage("Keep Typing");
-
-    return null;
+    return movies;
 };
 
 const createMoviesHtml = (movie) => {
