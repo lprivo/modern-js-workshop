@@ -4,14 +4,12 @@ const searchResults = document.getElementById("search-results");
 const errorField = document.getElementById("errors");
 const searchTextField = document.getElementById("search-movies");
 
-const setErrorMessage = (movies) => {
-    let message = "";
-
-    if (movies.ResponseCode !== "200") {
-        message = movies.Error;
+const setErrorMessage = (errorCode, errorMessage) => {
+    if (errorCode !== "200") {
+        errorField.innerHTML = `<h2>${errorMessage}</h2>`;
+    } else {
+        errorField.innerHTML = ``;
     }
-
-    errorField.innerHTML = `<h2>${message}</h2>`;
 };
 
 const getMovies = async () => {
@@ -19,16 +17,16 @@ const getMovies = async () => {
     const movies = await findMovies(searchTerm);
     // maybe if something clever is done in findMovies, I wouldn't need all this here
 
-    setErrorMessage(movies);
+    setErrorMessage(movies.errorCode, movies.Error);
 
     return movies;
 };
 
 const createMoviesHtml = (movie) => {
     const movieImage = getPosterUrl(movie);
-    const movieTitle = movie.Title;
-    const movieImdb = movie.imdbID;
-    const image = `<img src=${movieImage} alt='${movieTitle}' id=${movieImdb} class="poster" />`;
+    const movieCopy = movie;
+    const { Title, imdbID } = movieCopy;
+    const image = `<img src=${movieImage} alt='${Title}' id=${imdbID} class="poster" />`;
 
     return image;
 };
