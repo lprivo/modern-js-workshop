@@ -1,4 +1,5 @@
 import { findMovies, findMovie, getPosterUrl } from "./movieData";
+import { debounce } from "./utils";
 
 const searchResults = document.getElementById("search-results");
 const errorField = document.getElementById("errors");
@@ -8,16 +9,18 @@ const setErrorMessage = (errorCode, errorMessage) => {
     if (errorCode !== "200") {
         errorField.innerHTML = `<h2>${errorMessage}</h2>`;
     } else {
-        errorField.innerHTML = ``;
+        errorField.innerHTML = "";
     }
 };
 
 const getMovies = async () => {
     const searchTerm = searchTextField.value;
+
     const movies = await findMovies(searchTerm);
+
     // maybe if something clever is done in findMovies, I wouldn't need all this here
 
-    setErrorMessage(movies.errorCode, movies.Error);
+    setErrorMessage(movies.ResponseCode, movies.Error);
 
     return movies;
 };
@@ -39,6 +42,7 @@ const createPosterImg = async (movies) => {
 
         return moviesList;
     }
+    searchResults.innerHTML = "";
 
     return ``;
 };
@@ -51,12 +55,19 @@ const addEventListeners = () => {
     });
 };
 
-// form.onsubmit = async (event) => {
-searchTextField.onkeyup = async (event) => {
-    event.preventDefault();
+const debouncedGetMovies = debounce(() => {
     getMovies()
         .then(createPosterImg)
         .then(addEventListeners);
+}, 500);
+
+// form.onsubmit = async (event) => {
+searchTextField.onkeyup = (event) => {
+    event.preventDefault();
+    // getMovies()
+    //     .then(createPosterImg)
+    //     .then(addEventListeners);
+    debouncedGetMovies();
 };
 
 // add pagination

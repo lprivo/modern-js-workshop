@@ -6,8 +6,6 @@ const hasAPoster = (movie) => movie.Poster !== "N/A";
 const hasAnError = (result) => result.Response === "False";
 
 const generateResponseCode = (result) => {
-    console.log(result);
-
     if (hasAnError(result)) {
         const responseCodes = {
             "Too many results.": "420",
