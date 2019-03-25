@@ -48,7 +48,5 @@ export const findMovie = async (imdbId) => {
         `http://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${imdbId}&plot=short`
     );
 
-    console.log(result);
-
     return result;
 };

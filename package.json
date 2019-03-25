@@ -43,7 +43,8 @@
         "babel-core": "^7.0.0-bridge.0",
         "bricks.js": "^1.8.0",
         "cache-fetch": "^1.1.0",
-        "fetch-unless-cached": "^2.0.2"
+        "fetch-unless-cached": "^2.0.2",
+        "tingle.js": "^0.14.0"
     },
     "lint-staged": {
         "*.{js,jsx,css,md,scss}": [
