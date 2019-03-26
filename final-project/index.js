@@ -1,15 +1,6 @@
-import { findMovies, findMovie, getPosterUrl } from "./movieData";
+import { findMovies, findMovie, getMoviePoster } from "./movieData";
 import { debounce } from "./utils";
 import tingle from "tingle.js";
-
-const getMoviePoster = (movie) => {
-    const movieImage = getPosterUrl(movie);
-    const movieCopy = movie;
-    const { Title, imdbID } = movieCopy;
-    const image = `<img src=${movieImage} alt='${Title}' id=${imdbID} class="poster" />`;
-
-    return image;
-};
 
 const createModal = async (imdbID) => {
     const movie = await findMovie(imdbID);
@@ -32,9 +23,9 @@ const createModal = async (imdbID) => {
 
     const modalContent = {
         title: `<h2 class="title">${movie.Title}</h2>`,
-        year: `<p  class="year">${movie.Year}</p>`,
-        language: `<p  class="language">${movie.Language}</p>`,
-        plot: `<p  class="plot">${movie.Plot}</p>`,
+        year: `<p  class="year">Year: ${movie.Year}</p>`,
+        language: `<p  class="language">Language: ${movie.Language}</p>`,
+        plot: `<p  class="plot">Plot: ${movie.Plot}</p>`,
         poster: getMoviePoster(movie),
         imdRating: `<p  class="imdbRating">IMDB rating: ${
             movie.imdbRating
@@ -69,14 +60,12 @@ const getMovies = async () => {
 
     const movies = await findMovies(searchTerm);
 
-    // maybe if something clever is done in findMovies, I wouldn't need all this here
-
     setErrorMessage(movies.ResponseCode, movies.Error);
 
     return movies;
 };
 
-const createPosterImg = async (movies) => {
+const fillScreenWithPosters = async (movies) => {
     if (movies && movies.Response !== "False") {
         const moviesList = movies.Search.map(getMoviePoster);
 
@@ -99,16 +88,12 @@ const addEventListeners = () => {
 
 const debouncedGetMovies = debounce(() => {
     getMovies()
-        .then(createPosterImg)
+        .then(fillScreenWithPosters)
         .then(addEventListeners);
 }, 500);
 
-// form.onsubmit = async (event) => {
 searchTextField.onkeyup = (event) => {
     event.preventDefault();
-    // getMovies()
-    //     .then(createPosterImg)
-    //     .then(addEventListeners);
     debouncedGetMovies();
 };
 

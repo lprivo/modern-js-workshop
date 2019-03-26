@@ -29,6 +29,15 @@ export const getPosterUrl = (movie) => {
     return `//www.classicposters.com/images/nopicture.gif`;
 };
 
+export const getMoviePoster = (movie) => {
+    const movieImage = getPosterUrl(movie);
+    const movieCopy = movie;
+    const { Title, imdbID } = movieCopy;
+    const image = `<img src=${movieImage} alt='${Title}' id=${imdbID} class="poster" />`;
+
+    return image;
+};
+
 export const findMovies = async (key, page = 1) => {
     let result = {};
 
