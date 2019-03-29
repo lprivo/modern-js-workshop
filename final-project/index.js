@@ -9,6 +9,21 @@ const paginator = document.getElementById("paginator");
 let currentPage = 1;
 let thereIsMore = false;
 
+const getModalContentFromMovie = (movie) => {
+    const modalContent = {
+        title: `<h2 class="title">${movie.Title}</h2>`,
+        year: `<p  class="year">Year: ${movie.Year}</p>`,
+        language: `<p  class="language">Language: ${movie.Language}</p>`,
+        plot: `<p  class="plot">Plot: ${movie.Plot}</p>`,
+        poster: getMoviePoster(movie),
+        imdRating: `<p  class="imdbRating">IMDB rating: ${
+            movie.imdbRating
+        }</p>`,
+    };
+
+    return modalContent;
+};
+
 const createModal = async (imdbID) => {
     const movie = await findMovie(imdbID);
 
@@ -28,16 +43,7 @@ const createModal = async (imdbID) => {
         },
     });
 
-    const modalContent = {
-        title: `<h2 class="title">${movie.Title}</h2>`,
-        year: `<p  class="year">Year: ${movie.Year}</p>`,
-        language: `<p  class="language">Language: ${movie.Language}</p>`,
-        plot: `<p  class="plot">Plot: ${movie.Plot}</p>`,
-        poster: getMoviePoster(movie),
-        imdRating: `<p  class="imdbRating">IMDB rating: ${
-            movie.imdbRating
-        }</p>`,
-    };
+    const modalContent = getModalContentFromMovie(movie);
 
     // set content
     modal.setContent(Object.values(modalContent).join(""));
