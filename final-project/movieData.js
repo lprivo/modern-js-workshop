@@ -38,7 +38,7 @@ export const getMoviePoster = (movie) => {
     return image;
 };
 
-export const findMovies = async (key, page = 1) => {
+export const findMovies = async (key, page) => {
     let result = {};
 
     if (key) {
