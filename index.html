@@ -4,31 +4,29 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <title>I 😻 JS</title>
-        <style type="text/css">
-            html,
-            body {
-                font-family: Helvetica, Verdana, sans-serif;
-                font-size: large;
-            }
-            p {
-                text-align: center;
-            }
-            h1 {
-                font-size: 100%;
-            }
-        </style>
+        <title>JMDB - Jules' Movie Database</title>
+        <link
+            rel="stylesheet"
+            href="./node_modules/tingle.js/dist/tingle.min.css"
+        />
+        <link rel="stylesheet" type="text/css" href="./css/style.css" />
+        <script src="./index.js" defer></script>
     </head>
 
     <body>
-        <nav>
-            <ul>
-                <li><a href="/week01/index.html">Week 1 </a></li>
-                <li><a href="/week02/index.html">Week 2 </a></li>
-                <li><a href="/week03/index.html">Week 3 </a></li>
-                <li><a href="/week04/index.html">Week 4 </a></li>
-                <li><a href="/final-project/index.html">Final project </a></li>
-            </ul>
-        </nav>
+        <div class="search-form">
+            <input
+                type="search"
+                name="search-movies"
+                id="search-movies"
+                placeholder="Start typing"
+                autocomplete="off"
+                autofocus
+            />
+        </div>
+        <div id="errors"></div>
+        <div id="paginator"></div>
+        <div id="search-results"></div>
+        
     </body>
 </html>
