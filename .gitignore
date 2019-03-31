@@ -4,4 +4,4 @@ dist
 .idea
 .DS_Store
 .cache
-
+credentials.js
