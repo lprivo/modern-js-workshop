@@ -44,3 +44,19 @@ body {
 .tingle-modal-box__content {
     padding: 10px;
 }
+
+#paginator {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-content: center;
+    align-items: flex-start;
+}
+
+#prev,
+#next {
+    order: 0;
+    flex: 0 1 auto;
+    align-self: auto;
+}
