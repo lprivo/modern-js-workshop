@@ -41,7 +41,10 @@ const fillScreenWithPosters = async (movies) => {
     if (movies && movies.Response !== "False") {
         const moviesList = movies.Search.map(getMoviePoster);
 
-        searchResults.innerHTML = await moviesList.join("");
+        searchResults.innerHTML = "";
+        await moviesList.forEach((element) => {
+            searchResults.append(element);
+        });
 
         return moviesList;
     }
@@ -58,20 +61,15 @@ const addEventListeners = () => {
     });
 };
 
-const debouncedGetMovies = (immediate) =>
-    debounce(
-        () => {
-            getMovies()
-                .then(fillScreenWithPosters)
-                .then(addEventListeners);
-        },
-        500,
-        immediate
-    );
+const debouncedGetMovies = debounce(() => {
+    getMovies()
+        .then(fillScreenWithPosters)
+        .then(addEventListeners);
+}, 500);
 
 searchTextField.onkeyup = (event) => {
     event.preventDefault();
-    debouncedGetMovies()();
+    debouncedGetMovies();
 };
 
 const changeCurrentPage = (page) => {
@@ -80,7 +78,7 @@ const changeCurrentPage = (page) => {
     if (page + currentPage >= 1 && page + currentPage <= maxPage) {
         state.currentPage += page;
         // get movies instantly with true flag
-        debouncedGetMovies(true)();
+        debouncedGetMovies(true);
     }
 
     console.log("currentPage", currentPage);

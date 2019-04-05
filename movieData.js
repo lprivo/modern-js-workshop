@@ -33,7 +33,12 @@ export const getMoviePoster = (movie) => {
     const movieImage = getPosterUrl(movie);
     const movieCopy = movie;
     const { Title, imdbID } = movieCopy;
-    const image = `<img src=${movieImage} alt='${Title}' id=${imdbID} class="poster" />`;
+    const image = document.createElement("img");
+
+    image.src = movieImage;
+    image.id = imdbID;
+    image.alt = Title;
+    image.className = "poster";
 
     return image;
 };

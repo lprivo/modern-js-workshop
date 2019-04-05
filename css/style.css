@@ -59,4 +59,8 @@ body {
     order: 0;
     flex: 0 1 auto;
     align-self: auto;
+    cursor: pointer;
+    padding: 5px;
+    border: 1px solid black;
+    margin: 5px;
 }

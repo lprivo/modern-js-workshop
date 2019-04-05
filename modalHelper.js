@@ -7,7 +7,7 @@ const getModalContentFromMovie = (movie) => {
         year: `<p  class="year">Year: ${movie.Year}</p>`,
         language: `<p  class="language">Language: ${movie.Language}</p>`,
         plot: `<p  class="plot">Plot: ${movie.Plot}</p>`,
-        poster: getMoviePoster(movie),
+        poster: getMoviePoster(movie).outerHTML,
         imdRating: `<p  class="imdbRating">IMDB rating: ${
             movie.imdbRating
         }</p>`,
@@ -27,7 +27,6 @@ export const createModal = async (movie) => {
         stickyFooter: false,
         closeMethods: ["overlay", "button", "escape"],
         closeLabel: "Close",
-        // cssClass: ["custom-class-1", "custom-class-2"],
         onClose: () => {
             modal.destroy();
         },
