@@ -5,12 +5,10 @@ import { debounce } from "./utils";
 const searchResults = document.getElementById("search-results");
 const errorField = document.getElementById("errors");
 const searchTextField = document.getElementById("search-movies");
-const prev = document.getElementById("prev");
-const next = document.getElementById("next");
 
 const state = {
     currentPage: 1,
-    maxPage: 2,
+    maxPage: 1,
 };
 
 const setMaxPage = (results) => {
@@ -36,6 +34,44 @@ const getMovies = async () => {
 
     return movies;
 };
+const handlePaginatorButtons = () => {
+    const { currentPage, maxPage } = state;
+
+    const paginatorDiv = document.createElement("div");
+    paginatorDiv.id = "paginator";
+
+    const prev = document.createElement("div");
+    prev.id = "prev";
+    prev.textContent = "<<< Prev <<<";
+    const next = document.createElement("div");
+    next.id = "next";
+    next.textContent = ">>> Next >>>";
+
+    prev.onclick = () => changeCurrentPage(-1);
+    next.onclick = () => changeCurrentPage(1);
+    console.log("currentPage", currentPage);
+    console.log("maxPage", maxPage);
+
+    console.log(paginatorDiv.hasChildNodes());
+
+    if (currentPage > 1) {
+        paginatorDiv.appendChild(prev);
+    } else {
+        // paginatorDiv.removeChild(prev);
+    }
+
+    if (maxPage > currentPage) {
+        paginatorDiv.appendChild(next);
+    } else {
+        paginatorDiv.removeChild(next);
+    }
+
+    if (paginatorDiv.hasChildNodes()) {
+        searchResults.insertAdjacentElement("beforebegin", paginatorDiv);
+    } else {
+        document.body.removeChild(paginatorDiv);
+    }
+};
 
 const fillScreenWithPosters = async (movies) => {
     if (movies && movies.Response !== "False") {
@@ -46,9 +82,13 @@ const fillScreenWithPosters = async (movies) => {
             searchResults.append(element);
         });
 
+        handlePaginatorButtons();
+
         return moviesList;
     }
     searchResults.innerHTML = "";
+    state.currentPage = 1;
+    state.maxPage = 1;
 
     return ``;
 };
@@ -80,12 +120,6 @@ const changeCurrentPage = (page) => {
         // get movies instantly with true flag
         debouncedGetMovies(true);
     }
-
-    console.log("currentPage", currentPage);
-    console.log("maxpage", maxPage);
 };
-
-prev.onclick = () => changeCurrentPage(-1);
-next.onclick = () => changeCurrentPage(1);
 
 // style the results
