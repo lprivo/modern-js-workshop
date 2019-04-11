@@ -102,7 +102,6 @@ const handlePaginatorButtons = () => {
 };
 
 const fillScreenWithPosters = async (movies) => {
-    handlePaginatorButtons();
     if (movies && movies.Response !== "False") {
         const moviesList = movies.Search.map(getMoviePoster);
 
@@ -110,10 +109,11 @@ const fillScreenWithPosters = async (movies) => {
         await moviesList.forEach((element) => {
             searchResults.append(element);
         });
+        handlePaginatorButtons();
 
         return moviesList;
     }
-
+    handlePaginatorButtons();
     searchResults.innerHTML = "";
 
     return ``;
