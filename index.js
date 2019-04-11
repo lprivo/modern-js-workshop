@@ -139,4 +139,6 @@ searchTextField.onkeyup = (event) => {
     debouncedGetMovies();
 };
 
+// paginator doesn't reset currentPage
+// paginator doesn't remove buttons or the whole stuff from dom, when it should
 // style the results
