@@ -8,7 +8,7 @@ const searchTextField = document.getElementById("search-movies");
 
 const state = {
     currentPage: 1,
-    maxPage: 1,
+    maxPage: 0,
 };
 
 const setMaxPage = (results) => {
@@ -34,46 +34,75 @@ const getMovies = async () => {
 
     return movies;
 };
-const handlePaginatorButtons = () => {
-    const { currentPage, maxPage } = state;
 
+const changeCurrentPage = (page) => {
+    if (
+        state.currentPage + page >= 1 &&
+        state.currentPage + page <= state.maxPage
+    )
+        state.currentPage += page;
+
+    debouncedGetMovies(true);
+};
+
+const prevButton = () => {
+    const button = document.createElement("div");
+
+    button.id = "prev";
+    button.textContent = "<<< Prev <<<";
+    button.onclick = () => changeCurrentPage(-1);
+
+    return button;
+};
+
+const nextButton = () => {
+    const button = document.createElement("div");
+
+    button.id = "next";
+    button.textContent = ">>> Next >>>";
+    button.onclick = () => changeCurrentPage(1);
+
+    return button;
+};
+
+const handlePaginatorButtons = () => {
     const paginatorDiv = document.createElement("div");
+
     paginatorDiv.id = "paginator";
 
-    const prev = document.createElement("div");
-    prev.id = "prev";
-    prev.textContent = "<<< Prev <<<";
-    const next = document.createElement("div");
-    next.id = "next";
-    next.textContent = ">>> Next >>>";
+    paginatorDiv.appendChild(prevButton());
+    paginatorDiv.appendChild(nextButton());
 
-    prev.onclick = () => changeCurrentPage(-1);
-    next.onclick = () => changeCurrentPage(1);
-    console.log("currentPage", currentPage);
-    console.log("maxPage", maxPage);
-
-    console.log(paginatorDiv.hasChildNodes());
-
-    if (currentPage > 1) {
-        paginatorDiv.appendChild(prev);
+    if (state.maxPage > 1) {
+        if (!document.getElementById("paginator")) {
+            searchResults.insertAdjacentElement("beforebegin", paginatorDiv);
+        } else {
+            console.log("paginator already in dom");
+        }
     } else {
-        // paginatorDiv.removeChild(prev);
+        paginatorDiv.remove();
     }
 
-    if (maxPage > currentPage) {
-        paginatorDiv.appendChild(next);
-    } else {
-        paginatorDiv.removeChild(next);
-    }
+    // if (currentPage > 1) {
+    //     console.log("currentPage: ", currentPage);
+    //     if (!paginatorDiv.contains(prevButton())) {
+    //         paginatorDiv.appendChild(prevButton());
+    //     }
+    // } else {
+    //     prevButton().remove();
+    // }
 
-    if (paginatorDiv.hasChildNodes()) {
-        searchResults.insertAdjacentElement("beforebegin", paginatorDiv);
-    } else {
-        document.body.removeChild(paginatorDiv);
-    }
+    // if (maxPage > currentPage) {
+    //     if (!paginatorDiv.contains(nextButton())) {
+    //         paginatorDiv.appendChild(nextButton());
+    //     }
+    // } else {
+    //     nextButton().remove();
+    // }
 };
 
 const fillScreenWithPosters = async (movies) => {
+    handlePaginatorButtons();
     if (movies && movies.Response !== "False") {
         const moviesList = movies.Search.map(getMoviePoster);
 
@@ -82,13 +111,10 @@ const fillScreenWithPosters = async (movies) => {
             searchResults.append(element);
         });
 
-        handlePaginatorButtons();
-
         return moviesList;
     }
+
     searchResults.innerHTML = "";
-    state.currentPage = 1;
-    state.maxPage = 1;
 
     return ``;
 };
@@ -104,22 +130,13 @@ const addEventListeners = () => {
 const debouncedGetMovies = debounce(() => {
     getMovies()
         .then(fillScreenWithPosters)
-        .then(addEventListeners);
+        .then(addEventListeners)
+        .then(handlePaginatorButtons);
 }, 500);
 
 searchTextField.onkeyup = (event) => {
     event.preventDefault();
     debouncedGetMovies();
-};
-
-const changeCurrentPage = (page) => {
-    const { currentPage, maxPage } = state;
-
-    if (page + currentPage >= 1 && page + currentPage <= maxPage) {
-        state.currentPage += page;
-        // get movies instantly with true flag
-        debouncedGetMovies(true);
-    }
 };
 
 // style the results
